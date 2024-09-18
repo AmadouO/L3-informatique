@@ -26,16 +26,17 @@ class Liste
         this->ad = nullptr;
     }
     //Postcondition : la liste *this est  initialisée comme étant vide
-    Liste(const Liste & l);
+   // Liste(const Liste & l);
     //Postcondition :  la liste *this est initialisée en copie profonde de l
     //         (mais elles sont totalement independantes l'une de l'autre)
     
     //Destructeur---------------------------------------------------------------
     ~Liste(){
-        Cellule *pc = ad; 
-        ad = ad->psuivant; 
-        delete pc;
-        taille--;
+        while( ad != nullptr){
+            Cellule *pc = ad;    //stoke le pointeur courant 
+             ad = ad->psuivant;  //passe au suivant
+            delete pc;            //supprimer l'ancienne cellule 
+        }
     }
      //Postcondition : l'espace occupé par *this  peut-être restitué
     
@@ -75,12 +76,15 @@ class Liste
     //Résultat : valeur de l'Elem contenu dans la Cellule
     
     void affichage() const{
-        Cellule *pc = ad;
-        while (pc != nullptr){
-            std::cout<< pc->info<< std::endl;
-            pc = pc->psuivant; 
+        if (ad == nullptr){
+            std::cout<<"votre liste est vide "<< std::endl;
+        }else{
+            Cellule *pc = ad;
+            while (pc != nullptr){
+                std::cout<< pc->info<< std::endl;
+                pc = pc->psuivant; 
+            }
         }
-        
     }
     //Précondition : aucune
     //               (*this initialisée)
@@ -115,7 +119,7 @@ class Liste
         Cellule *pc = new Cellule;
         pc->info = e;
         pc->psuivant = nullptr;
-        if (ad = nullptr){
+        if (ad == nullptr){
             ad = pc;
         }else{
             Cellule *tmp = ad;
