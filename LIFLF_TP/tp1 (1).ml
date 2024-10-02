@@ -52,12 +52,21 @@ let rec concatene l1 l2 =
  *)
 
  type automate = {
-  vt : string list;
+  vocabulaire : string list;
   states : int list;
-  initial : int ;
-  finaux : int list;
+  initial_s : int ;
+  s_finaux : int list;
   transition : int -> string -> int  
  };;
+
+
+ let exemple_automate = {
+  vocabulaire = ["a"; "b"];            
+  states = [0; 1; 2];                
+  initial_s = 0;                 
+  s_finaux = [2];               
+  transition = [(0, "a", 1); (1, "b", 2)];  
+}
 
 
 (*
@@ -68,7 +77,12 @@ let rec concatene l1 l2 =
 
   En déduire une fonction qui détermine si un mot appartient au
   langage reconnu par un automate *)
-
+let acceptant automate state  mot = 
+  match mot with 
+  |[]->List.mem state automate.s_finaux
+  |tete_mot::rest_mot->match automate.transition state tete_mot with 
+                        |None ->  false
+                        |Some autre_state -> acceptant automate rest_mot autre_state;;
 
 
 (*
