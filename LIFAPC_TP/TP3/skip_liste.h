@@ -13,7 +13,7 @@ class Cellule{
     public :
         Elem info;
         Cellule *psuivant[HMAX];
-        int h;
+        int niveau;
 
 };
 
@@ -31,6 +31,8 @@ public:
     void affichage() const;
 
     void insere(const Elem & e);
+    void insere_autre_niveau(const Elem & e);
+    Cellule* recherche(const Elem & e);
     void etablissement_des_niveau();
 };
 
