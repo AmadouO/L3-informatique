@@ -24,7 +24,7 @@ ListeTriee::ListeTriee(){
             std::cout<< p_courant->info << " ==> " ;
             p_courant = p_courant->psuivant;
         }
-        std::cout<< "nulptr" <<std::endl;
+        std::cout<< std::endl;
         }
  }
 
