@@ -48,6 +48,7 @@ void Liste::vide(){
     }
  }
 
+
 void Liste::ajoutEnTete(const Elem & e){
     Cellule *p_courant = new Cellule;
     p_courant->info = e;

@@ -1,0 +1,51 @@
+			2 Redirection des entrer sortie 
+1. > : Redirection de sortie (écrasement)
+	$ echo "Premier test f1" > f1
+2. >> : Redirection de sortie (ajout a la fin du fichier au lieu de remplacer )
+	$ echo "Premier test f2" >> f2
+3. < : Redirection d'entrée ( lit le contenu d'un fichier et l'affiche )
+	$ cat < f1 equivaux a cat f1
+4. << : Permet d'insérer directement un bloc de texte comme entrée pour une commande, jusqu'à un délimiteur spécifié : Affiche le texte entre << EOF et EOF.
+5. <<< : Fournit une chaîne de texte directement comme entrée standard d'une commande.
+	$ grep "Bonjour" <<< "Bonjour le monde"
+	Cherche "Bonjour" dans la chaîne "Bonjour le monde".
+	
+Question 2 :
+1. rmdir /etc :
+Sortie attendue : Affiche un message d'erreur sur la sortie d'erreur standard (stderr) car /etc n'est pas vide.
+
+2. rmdir /etc > f3 :
+> redirige uniquement la sortie standard (stdout) vers le fichier f3.
+3. rmdir /etc 2> f4 :
+2> redirige uniquement la sortie d'erreur standard (stderr) vers le fichier f4.
+
+4. rmdir /etc &> f5 :
+&> redirige à la fois la sortie standard (stdout) et la sortie d'erreur standard (stderr) vers le fichier f5.
+
+5. rmdir /etc 2> /dev/null:
+2> redirige la sortie d'erreur standard (stderr) vers /dev/null, qui est un fichier spécial absorbant les données (les "jetant").
+Cela masque complètement le message d'erreur, et rien n'est affiché dans le terminal ni enregistré dans un fichier.
+
+Question 3 :
+cat > f6 < f1 : 
+Le contenu de f1 sera copié dans f6.
+
+cat > f7 << EOF
+Ici écrire
+un texte sur plusieurs lignes
+et qui se termine par
+EOF
+Le texte sera copié dans f7.
+
+cat > f8 <<< "Bonjour, comment allez-vous?"
+Le texte sera copié dans f8.
+
+3 Pipes : permet de combiné plusueur cmmande 
+$ cat f2 | wc -l
+Question 1. Que fait la commande ci-dessus ? Pensez à man wc.
+
+cette commande permet d'afficher le nombre de saut de ligne dans le fichier f2 
+
+
+
+
