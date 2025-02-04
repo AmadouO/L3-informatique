@@ -1,0 +1,45 @@
+#image-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    
+  }
+  
+  .affich_img {
+    height: auto;
+    max-width: 30%; /* 80% de la largeur d'affichage*/
+  }
+
+  #game-grid {
+    display: grid;
+    grid-template-columns: repeat(8, 50px);
+    grid-template-rows: repeat(8, 50px);
+    gap: 2px;
+    width: fit-content;
+    margin: auto;
+    border: 2px solid black;
+  }
+  
+  .grid-cell {
+    width: 50px;
+    height: 50px;
+    background-color: lightgray;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid black;
+  }
+  
+  .player {
+    background-color: red;
+  }
+  .dot {
+    pointer-events: none;
+    height: 50px;
+    width: 50px;
+    background-color: #bbb;
+    border-radius: 50%;
+    display: inline-block;
+    position: absolute;
+  }
+    
