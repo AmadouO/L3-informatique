@@ -3,26 +3,49 @@ console.info("app.js loading...");
 
 console.info("...app.js loaded");
 
-let count = 0; 
+const count = 0; 
+const operationPointer = 0;
+let history = [0];  // Historique des valeurs du compteur
+
+
+
 
 const decrementBtn = document.querySelector("#decrementBtn");
 const counter = document.querySelector("#counter");
 const incrementBtn = document.querySelector("#incrementBtn");
 
+const btn_undo = document.querySelector("#btn_undo");
+const btn_redo = document.querySelector("#btn_redo");
+/*
+// Mettre à jour le compteur et stocker l'opération dans l'historique
+function updateCounter(newCount, saveHistory = true) {
+  count = newCount;
+  counter.textContent = count;
+
+  if (saveHistory) {
+    history = history.slice(0, operationPointer + 1);  // Supprime les valeurs "refaites"
+    history.push(count);
+    operationPointer++;
+  }
+
+  // Désactiver les boutons si nécessaire
+  btn_undo.disabled = operationPointer === 0;
+  btn_redo.disabled = operationPointer === history.length - 1;
+}*/
 function updateCounter(count) {
   counter.textContent = count;
 }
 
 
 decrementBtn.addEventListener("click", () => {
-count = counter.textContent;
+//count = counter.textContent;
   updateCounter(count - 1);
 
 });
 
 incrementBtn.addEventListener("click", () => {
-count = counter.textContent;
-updateCounter(parseInt(count) + 1);
+  //count = counter.textContent;
+  updateCounter(parseInt(count) + 1);
 });
 
 const resetBtn = document.createElement("button");
@@ -31,9 +54,29 @@ resetBtn.textContent = "Reset";
 incrementBtn.after(resetBtn);
 
 resetBtn.addEventListener("click", () => {
-  count = counter.textContent;
+  //count = counter.textContent;
   updateCounter(0)
 });
+
+/*
+
+// Undo / Redo
+btn_undo.addEventListener("click", () => {
+  if (operationPointer > 0) {
+    operationPointer--;
+    updateCounter(history[operationPointer], false);
+  }
+});
+
+btn_redo.addEventListener("click", () => {
+  if (operationPointer < history.length - 1) {
+    operationPointer++;
+    updateCounter(history[operationPointer], false);
+  }
+});
+
+// Initialisation
+updateCounter(0);*/
 
 //*********************************** */
 //************Exercice 2 **********/
@@ -144,7 +187,19 @@ document.addEventListener("keydown", (event) => {
 
 let tracking = false; // État du traqueur
 let mousePos = { x: 0, y: 0 }; // Stocke la position de la souris
-let trackerInterval = null; // Stocke l'intervalle
+let trackerInterval = null; // Stocke l'intervalle// Undo / Redo
+btn_undo.addEventListener("click", () => {
+  if (operationPointer > 0) { //
+    operationPointer--;
+    updateCounter();
+  }
+});
+btn_redo.addEventListener("click", () => {
+  if (operationPointer < 0 ) {
+    operationPointer++;
+    updateCounter();
+  }
+});
 let animationFrame = null; // Stocke l'ID de requestAnimationFrame
 
 // Création du div .dot
@@ -201,7 +256,7 @@ function sortTable(columnIndex, type, ascending) {
   const rows = Array.from(tbody.querySelectorAll("tr")); 
 
   rows.sort((rowA, rowB) => {
-    let cellA = rowA.cells[columnIndex].textContent.trim();
+    let cellA = rowA.cells[columnIndex].textContent.trim(); // Récupérer le contenu de la cellule 
     let cellB = rowB.cells[columnIndex].textContent.trim();
 
     // Conversion en fonction du type
@@ -240,3 +295,10 @@ thead.addEventListener("click", (event) => {
 
   sortTable(columnIndex, type, sortStates[columnIndex]);
 });
+
+
+//############################## Exercice 1 bis bonus ############################
+
+
+
+
