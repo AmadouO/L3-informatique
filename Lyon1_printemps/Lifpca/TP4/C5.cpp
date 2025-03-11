@@ -11,13 +11,15 @@ using namespace std;
 
 mutex m;
 condition_variable c;
-bool verif1 = false;
-bool verif2 = false;
+///bool verif1 = false;
+//bool verif2 = false;
+int conteur = 0;
 
 void func_A1(){
     m.lock();
     cout << "I am A1 I should finish before B starts" << endl;
-    verif1 = true;
+    conteur++;
+   // verif1 = true;
     c.notify_all();
     m.unlock();
 }
@@ -25,15 +27,17 @@ void func_A1(){
 void func_A2(){
   m.lock();
   cout << "I am A2 I should finish before B starts" << endl;
-  verif2= true;
+  conteur++;
+  //verif2= true;
   c.notify_all();
   m.unlock();
 }
 
 void func_B(){
 
-  unique_lock l(m);
-  while(!verif1 || !verif2 )
+  unique_lock<mutex> l(m);
+ // while(!verif1 || !verif2 )
+ while( conteur != 2)
  {
     c.wait(l);
    }

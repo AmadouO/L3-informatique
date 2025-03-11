@@ -7,6 +7,7 @@ body {
     "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol",
     "Noto Color Emoji";
   color: #444;
+  
 }
 
 h1,
@@ -24,22 +25,43 @@ h3 {
 .deck-title-container {
   height: 3em;
   /* Votre code CSS ici */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.5em;
+  font-weight: bold;
 }
 
 /* Styles pour la galerie */
 .pokemon-gallery {
   margin-top: 20px;
   /* Completer avec la flexbox */
+  display: flex;
+  justify-content: center;
+  gap: 20px;
 }
 
 .pokemon-card {
   /* Completer avec la flexbox */
   border: 1px solid #ccc;
   padding: 5px;
-  height: 300px;
+  height: 250px;
   text-align: center;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  /*transition: transform 0.3s ease;*/
 }
 
 .pokemon-card img {
   width: 100%; /* Force à ce que l'image "rentre" dans la card et soit bien retaillée*/
+  max-height: 150px; /* Taille max pour éviter que l'image dépasse */
+  object-fit: contain; /* Garde les proportions */
 }
+.pokemon-card:hover {
+  transform: scale(1.1); /* Agrandir légèrement au survol */
+}
+.selected {
+  border: 3px solid #ffcc00;
+  transform: scale(1.1);
+  box-shadow: 0 0 15px rgba(255, 204, 0, 0.7);
+}
+
