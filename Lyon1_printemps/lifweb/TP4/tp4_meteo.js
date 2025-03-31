@@ -5,76 +5,90 @@ document.addEventListener("DOMContentLoaded", () => {
   
     const lat = 59.8939243;
     const lon = 10.6203135;
+    //const lat = 81.24167; 
+    //const lon = 39.27487;
     const url = `https://api.met.no/weatherapi/locationforecast/2.0/compact?lat=${lat}&lon=${lon}`;
-  
-    fetch(url, {
-      headers: { "User-Agent": "Mozilla/5.0" }, // Important pour éviter un refus de l'API
-    })
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error(`Erreur API: ${response.status}`);
-        }
-        return response.json();
-      })
-      .then((data) => {
-        const details = data.properties.timeseries[0].data.instant.details;
-        const temperature = details.air_temperature;
-        
-        // Met à jour la température
-        temperatureSpan.textContent = `${temperature}`;
-  
-        // Déterminer une icône météo simplifiée (ex: soleil, nuage, pluie)
-        const symbol = data.properties.timeseries[0].data.next_1_hours?.summary.symbol_code || "unknown";
-        //iconObject.data = `https://api.met.no/weatherapi/weathericon/2.0/legacysymbols?symbol=${symbol}`;
-        iconObject.data = `weathericons/svg/${symbol}.svg`;
 
-        console.log("Météo Oslo :", temperature, symbol);
+    fetch(url)
+    .then((response) => {
+      //console.log(response)
+      if(!response.ok){
+        throw new error(`erreur API : ${response.status}`)
+      }
+      return response.json();
       })
-      .catch((error) => {
-        console.error("Erreur lors de la récupération des données météo :", error);
-        temperatureSpan.textContent = "N/A";
-      });
-  });
+    .then((data) => { 
+     // console.log(data)
+      const details = data.properties.timeseries[0].data.instant.details;
+      //console.log(details);
+      const temperature = details.air_temperature;
+
+      temperatureSpan.textContent = `${temperature}`
+
+      const symbol = data.properties.timeseries[0].data.next_1_hours.summary.symbol_code || "unknow";
+      //console.log(symbol);
+      iconObject.data = `weathericons/svg/${symbol}.svg`;
+      console.log("Météo Oslo :", temperature, symbol);
+
+
+     })
+     .catch((error) => {
+      console.error("erreur lors de la recuperation de donnée metéo :", error)
+      temperatureSpan.textContent = "N/A"
+     });
+    //await 
+    afficherMeteoLyon();
+
+     getCoordinates("Lyon");
+     afficherMeteoVilles();
+  
+});
 
   //############################################################################################################
 
-  document.addEventListener("DOMContentLoaded", async () => {
-    await afficherMeteoLyon();
-  });
+async function getCoordinates(ville) {
+  const url = `https://data.geopf.fr/geocodage/search?&q=${ville}`;
+  try {
+    const response = await fetch(url);
+    if ( !response.ok ){
+      throw new Error(`Erreur API : ${response.status}` );
+    }
+    const data = await response.json();
+     console.log(data);
+     if (data.features.length === 0) {
+        throw new Error("Ville non trouvée");
+     }
   
-  async function getCoordinates(city) {
-    const url = `https://data.geopf.fr/geocodage/search?&q=${city}`;
+     // ⚠️ L'API renvoie [longitude, latitude], on doit inverser !
+     const [lon, lat] = data.features[0].geometry.coordinates;
+     console.log(lon)
+     console.log(lat)
+
+     return { lat, lon };
     
-    try {
-      const response = await fetch(url);
-      if (!response.ok) throw new Error(`Erreur API IGN: ${response.status}`);
-      
-      const data = await response.json();
-      if (data.features.length === 0) throw new Error("Ville non trouvée");
-  
-      // ⚠️ L'API renvoie [longitude, latitude], on doit inverser !
-      const [lon, lat] = data.features[0].geometry.coordinates;
-      
-      return { lat, lon };
-    } catch (error) {
-      console.error("Erreur récupération coordonnées :", error);
-      return null;
-    }
+  } catch (error) {
+    console.error("Erreur récupération coordonnées :", error);
+    return null;
   }
-  
-  async function getMeteo(lat, lon) {
-    const url = `https://api.met.no/weatherapi/locationforecast/2.0/compact?lat=${lat}&lon=${lon}`;
-  
-    try {
-      const response = await fetch(url, { headers: { "User-Agent": "Mozilla/5.0" } });
-      if (!response.ok) throw new Error(`Erreur API météo: ${response.status}`);
-  
-      return await response.json();
-    } catch (error) {
-      console.error("Erreur récupération météo :", error);
-      return null;
+
+}
+
+
+async function getMeteo(lat, lon) {
+  const url = `https://api.met.no/weatherapi/locationforecast/2.0/compact?lat=${lat}&lon=${lon}`;
+
+  try {
+    const response = await fetch(url);
+    if ( !response.ok ){
+      throw new Error(`Erreur API : ${response.status}` );
     }
+    return await response.json();
+
+  } catch (error) {
+    console.error("Erreur récupération météo :", error);
+    return null;
   }
+}
   
   async function afficherMeteoLyon() {
     const meteoLyon = document.querySelector("#meteo-lyon");
@@ -99,7 +113,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const iconObject = meteoLyon.querySelector(".meteo-icon");
   
     // 🔹 Récupérer la météo avec les coordonnées
-    const meteoData = await getMeteo(lat, lon);
+    const meteoData = await  getMeteo(lat, lon);
     if (!meteoData) {
       temperatureSpan.textContent = "N/A";
       return;
@@ -119,10 +133,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   //##############################################################################################
 
-  document.addEventListener("DOMContentLoaded", async () => {
-    await afficherMeteoVilles();
-  });
-  
+
   const villesFavorites = ["Paris", "Marseille", "Toulouse", "Villeurbanne", "Lille"];
   
   async function afficherMeteoVilles() {
@@ -139,12 +150,18 @@ document.addEventListener("DOMContentLoaded", () => {
   
       // Cloner le template
       const meteoCard = template.content.cloneNode(true);
+      console.log(meteoCard);
       
       // Sélectionner les éléments du clone
       const villeSpan = meteoCard.querySelector(".ville");
       const coordSpan = meteoCard.querySelector(".coord");
       const temperatureSpan = meteoCard.querySelector(".temperature");
       const iconObject = meteoCard.querySelector(".meteo-icon");
+
+      if (!villeSpan || !coordSpan || !temperatureSpan || !iconObject) {
+        console.error("Problème avec le clonage du template !");
+        continue;
+    }
   
       // Mettre à jour les données
       villeSpan.textContent = ville;
